@@ -1,0 +1,64 @@
+Note - The script explained given below is suitable only for the scenario I explained only. But my aim of this post is to
+show you all, how you all can play with different folder path by traversing it. I have used 2 loop structures in this script. By studying 
+the scenario and the script, you all can develop some idea to create your own script according to your needs, for example deleting/creating/renaming folder
+structure across different network paths.
+
+Story -
+Recently, I was given a task to remove certain folders ("cache" folders) under some user profiles. For example
+the path in the network is like this,
+\\Training\Files\John\Software\Purpose\Train1\cache
+\\Training\Files\John\Software\Purpose\Train2\cache
+
+The folder path upto all user profiles are same, but sub directories may or may not present inside each user profile.
+So the first challenge is to check whether the particular user profile has that certain sub directory path.
+Eg - "\Software\purpose\"
+
+After reaching that sub directory path, there are multiple folders named "Trainx" where is the digit and the cache folders
+are present inside it (some time not), For example,
+\Train1\cache
+\Train2\cache
+\Train3\ (Under Train3 folder there is no "cache" folder. Therefore we have to check this before deleting that folder inside it)
+
+So, its essential to remove all those cache folders under each user profile. Meaning, need to remove all cache folders from 
+user "John"
+\\Training\Files\John\Software\Purpose\Train1\cache
+\\Training\Files\John\Software\Purpose\Train2\cache
+\\Training\Files\John\Software\Purpose\Train3\
+
+So, I have written a python script (pyremove.py) for this purpose.
+
+Before testing this script in the network path, I have checked my script in my local machine, by creating same folder structure, for different
+conditions.
+
+For example, I have created a folder structure like this in my local machine,
+E:\Training\Files\John\Software\Purpose\Train1\cache ("cache" folder is there)
+E:\Training\Files\John\Software\Purpose\Train2\cache ("cache" folder is there)
+E:\Training\Files\John\Software\Purpose\Train3 (No "cache" folder is there)
+E:\Training\Files\Arun\Software\Purpose\Train1\cache ("cache" folder is there)
+E:\Training\Files\Arun\Software\Purpose\Train2\cache ("cache" folder is there)
+E:\Training\Files\William (No sub folder "\Software\Purpose" is there)
+E:\Training\Files\Steve\Software\Purpose (No "Train" folder is there)
+
+Just dive into the script.
+
+In this python script, I have used two external modules only. That are "os" and "time" module.
+In order to traverse the path in the system, we have to use "os" module.
+
+In order to log the activities within the script, I have created a function called timestamp,
+def timestamp (message):
+#a-> append, w-> write, r->read
+f=open(log,'a')
+f.write('\n' + time.strftime('%d/%m/%Y %H:%M:%S')+" <<Info>> : " + message)
+f.close()
+
+The output of the script should be appended to the log file, therefore I have used 'a' (append), while opening the file.
+
+Note -
+1.os.getcwd() -> To output the current working directory
+2.os.chdir() -> To change the current working directory
+3.os.path.exists() -> To check whether a directory path exits, return "True" when path exits, if not return "False"
+4.next(os.walk('.'))[1] -> Getting immediate sub directories under the current folder. The output will be stored in a list type variable
+
+In order to count the number of items in the list type variable that was output from "next(os.walk('.'))[1]", I have
+used len().
+
